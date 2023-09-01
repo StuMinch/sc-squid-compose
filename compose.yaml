@@ -1,0 +1,19 @@
+version: "3"
+services:
+  squidproxy:
+    image: "ubuntu/squid"
+    command: ""
+    network_mode: host
+    volumes: 
+      - ./squid.conf:/etc/squid/squid.conf
+  sauce-connect:
+    image: "saucelabs/sauce-connect:latest"
+    platform: "linux/amd64"
+    environment:
+      SAUCE_USERNAME: ${SAUCE_USERNAME}
+      SAUCE_ACCESS_KEY: ${SAUCE_ACCESS_KEY}
+      SAUCE_OUTPUT_FORMAT: "text"
+    command: "-i composed-docker-sc -r us-west -p 127.0.0.1:3128 --proxy-localhost"
+    network_mode: host
+    depends_on:
+      - squidproxy
